@@ -29,7 +29,7 @@ class DogFactsApplicationTests {
 	private FactService factService;
 
 	@Test
-	void contextLoads() throws Exception {
+	void contextLoads() {
 		assertThat(controller).isNotNull();
 	}
 
@@ -38,7 +38,8 @@ class DogFactsApplicationTests {
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/facts/dog"))
 				.andDo(MockMvcResultHandlers.print())
 				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON));
+				.andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.header().exists("Vary"));
 	}
 
 	@Test
