@@ -4,7 +4,7 @@ This is the Dog API and it provides dog facts as a service dogdog 🐶
 
 ## Use it as an API
 
-Live Endpoint: `http://`
+Live Endpoint: `https://dog-fact.herokuapp.com`
 
 | Path                | Description                      | Parameters |
 |---------------------|----------------------------------|------------|
