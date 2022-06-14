@@ -1,12 +1,14 @@
 package com.rameskum.dogfacts.controller;
 
-import com.rameskum.dogfacts.controller.model.FactResponse;
 import com.rameskum.dogfacts.service.FactService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 @RequiredArgsConstructor
 @RequestMapping("/facts")
@@ -14,12 +16,12 @@ import org.springframework.web.servlet.ModelAndView;
 public class FactsSVGController {
 
 	private final FactService factService;
+	private final TemplateEngine engine;
 
-	@GetMapping(value = "dog", produces = "image/svg+xml")
-	public ModelAndView facts() {
-		FactResponse randomFact = this.factService.getRandomFact();
-		ModelAndView modelAndView = new ModelAndView("facts");
-		modelAndView.addObject("fact", randomFact.getFacts().get(0));
-		return modelAndView;
+	@GetMapping(value = "dog", consumes = MediaType.ALL_VALUE, produces = {"image/svg+xml;charset=UTF-8"})
+	public ResponseEntity<String> facts() {
+		Context ctx = new Context();
+		ctx.setVariable("fact", this.factService.getRandomFact());
+		return ResponseEntity.ok(this.engine.process("facts", ctx));
 	}
 }

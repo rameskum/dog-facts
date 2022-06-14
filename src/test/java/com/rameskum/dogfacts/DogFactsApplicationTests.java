@@ -43,6 +43,14 @@ class DogFactsApplicationTests {
 	}
 
 	@Test
+	void responseType() throws Exception {
+		this.mockMvc.perform(MockMvcRequestBuilders.get("/facts/dog"))
+				.andDo(MockMvcResultHandlers.print())
+				.andExpect(MockMvcResultMatchers.status().isOk())
+				.andExpect(MockMvcResultMatchers.header().string("Content-Type", "image/svg+xml;charset=UTF-8"));
+	}
+
+	@Test
 	void testFactService() {
 		Assertions.assertEquals(1, this.factService.getFacts(1).getFacts().size());
 		Assertions.assertEquals(2, this.factService.getFacts(2).getFacts().size());
