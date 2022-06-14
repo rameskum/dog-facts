@@ -5,9 +5,11 @@ import com.rameskum.dogfacts.provoider.Facts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Random;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -19,18 +21,22 @@ public class FactService {
 	public FactResponse getFacts(int count) {
 		final Set<Integer> generated = new LinkedHashSet<>();
 		count = Math.min(count, facts.getDog().size());
+
 		while (generated.size() < count) {
 			int randomNumber = RANDOM.nextInt(facts.getDog().size());
 			generated.add(randomNumber);
 		}
 
-		final FactResponse response = new FactResponse();
-		response.setCount(count);
-
-		for (int i : generated) {
-			response.getFacts().add(facts.getDog().get(i));
-		}
-
-		return response;
+		return FactResponse.builder()
+				.count(count)
+				.facts(generated.stream().map(i -> facts.getDog().get(i)).collect(Collectors.toList()))
+				.build();
+	}
+	public FactResponse getRandomFact() {
+		int factId = RANDOM.nextInt(facts.getDog().size());
+		return FactResponse.builder()
+				.count(1)
+				.facts(Collections.singletonList(facts.getDog().get(factId)))
+				.build();
 	}
 }
