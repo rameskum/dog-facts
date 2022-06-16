@@ -5,6 +5,7 @@ import com.rameskum.dogfacts.service.FactService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -19,12 +20,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureMockMvc
 class DogFactsApplicationTests {
 
+	@Value("${cache-ttl:10}")
+	private long ttl;
+
 	@Autowired
 	private MockMvc mockMvc;
-
 	@Autowired
 	private FactsController controller;
-
 	@Autowired
 	private FactService factService;
 
@@ -47,7 +49,8 @@ class DogFactsApplicationTests {
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/facts/dog"))
 				.andDo(MockMvcResultHandlers.print())
 				.andExpect(MockMvcResultMatchers.status().isOk())
-				.andExpect(MockMvcResultMatchers.header().string("Content-Type", "image/svg+xml;charset=UTF-8"));
+				.andExpect(MockMvcResultMatchers.header().string("Content-Type", "image/svg+xml;charset=UTF-8"))
+				.andExpect(MockMvcResultMatchers.header().string("Cache-Control", String.format("max-age=%d", ttl)));
 	}
 
 	@Test
